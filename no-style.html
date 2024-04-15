@@ -1,0 +1,252 @@
+<!-- EBSCO Search Box Begins -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="search-container">
+      <!-- "https://searchbox.ebsco.com/search/" -->
+      <!-- https://marion.tlcdelivers.com/ -->
+      <form class="ebsco-single-search" target="_blank" id="search-box">
+        <div id="hidden-inputs"></div>
+        <input
+          id="eb-sbb-search-input"
+          type="text"
+          name=""
+          placeholder="Search our catalog"
+        />
+        <input value="Search" type="submit" />
+      </form>
+      <div id="search-switch">
+        <label>
+          <input
+            type="radio"
+            name="search"
+            class="search-switch"
+            data-search="tlc"
+            checked
+          />
+          <span>Books</span>
+        </label>
+        <label>
+          <input
+            type="radio"
+            name="search"
+            class="search-switch"
+            data-search="eds"
+          />
+          <span>Articles & Databases</span>
+        </label>
+      </div>
+      <!-- EBSCO Search Box Ends -->
+      <script>
+        document.addEventListener('DOMContentLoaded', () => {
+          // ** Form Action Constants and Request Parameter Objects ** //
+          const edsAction = 'https://searchbox.ebsco.com/search/';
+          const edsParams = {
+            schemaId: 'search',
+            custid: 's9230273',
+            group: 'main',
+            profid: 'eds',
+            scope: 'site',
+            site: 'eds-live',
+            direct: 'true',
+          };
+          const tlcAction = 'https://marion.tlcdelivers.com/';
+          const tlcParams = {
+            section: 'search',
+            config: 'bbdefault',
+          };
+
+          // ** DOM Constants ** //
+          const searchBox = document.getElementById('search-box');
+          const searchesTypes = document.querySelectorAll('.search-switch');
+          const searchInput = document.getElementById('eb-sbb-search-input');
+          const hiddenInputs = document.getElementById('hidden-inputs');
+
+          // ** Logic Begins Here ** //
+          // Handle search type change
+
+          searchesTypes.forEach((search) => {
+            const edsPlaceholder = 'Search articles & databases';
+            const tlcPlaceholder = 'Search our catalog';
+
+            // Evaluate search input placeholder on page load
+            if (search.checked) {
+              if (search.dataset.search === 'eds') {
+                searchInput.setAttribute('placeholder', edsPlaceholder);
+              } else {
+                searchInput.setAttribute('placeholder', tlcPlaceholder);
+              }
+            }
+            // Evaluate search input place holder on search type change
+            search.addEventListener('change', (e) => {
+              if (e.target.dataset.search === 'eds') {
+                searchInput.setAttribute('placeholder', edsPlaceholder);
+              } else {
+                searchInput.setAttribute('placeholder', tlcPlaceholder);
+              }
+            });
+          });
+
+          //  Handle search form submittion
+          searchBox.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            //  Do not submit form it search input is empty
+            if (!searchInput.value) return;
+
+            // Remove previous hidden values
+            removeChildren(hiddenInputs);
+
+            // Check which search option is selected
+            for (const search of searchesTypes) {
+              // Only submit form if search option is checked.
+              if (search.checked) {
+                // If tlc option: build hidden inputs, set action, and set text input name
+                if (search.dataset.search === 'tlc') {
+                  searchInput.name = 'term';
+                  searchBox.action = tlcAction;
+                  const inputs = buildHiddenInputs(tlcParams);
+
+                  for (const input of inputs) {
+                    hiddenInputs.appendChild(input);
+                  }
+
+                  //  If eds option: build hidden inputs, set action, and set text input name
+                } else if (search.dataset.search === 'eds') {
+                  searchInput.name = 'bquery';
+                  searchBox.action = edsAction;
+                  const inputs = buildHiddenInputs(edsParams);
+
+                  for (const input of inputs) {
+                    hiddenInputs.appendChild(input);
+                  }
+                  //   return null in all other case
+                } else {
+                  return null;
+                }
+
+                // Submit search form
+                searchBox.submit();
+
+                //  Clear search box
+                setTimeout(() => {
+                  searchInput.value = '';
+                }, 500);
+              }
+            }
+          });
+
+          // ** Helper Functions ** //
+          function removeChildren(parent) {
+            while (parent.hasChildNodes()) {
+              parent.removeChild(parent.firstChild);
+            }
+          }
+
+          function buildHiddenInputs(params) {
+            let inputs = [];
+
+            for (const param in params) {
+              const input = document.createElement('input');
+              input.setAttribute('type', 'hidden');
+              input.name = param;
+              input.value = params[param];
+              inputs.push(input);
+            }
+
+            return inputs;
+          }
+        });
+      </script>
+      <style>
+        * {
+          font-size: 15px;
+        }
+
+        :root {
+          --search-color: #2079c6;
+          --search-border-radius: 5px;
+          --search-padding: 0.7rem;
+          --font-size: 1.1rem;
+        }
+
+        #search-box {
+          display: flex;
+          gap: 0;
+        }
+
+        #search-box * {
+          font-size: var(--font-size);
+        }
+
+        #search-box input[type='text'] {
+          border: solid 1px black;
+          border-right: none;
+          border-radius: var(--search-border-radius);
+          border-top-right-radius: 0;
+          border-bottom-right-radius: 0;
+          padding: var(--search-padding);
+          width: 300px;
+        }
+
+        #search-box input[type='submit'] {
+          border: none;
+          border-radius: var(--search-border-radius);
+          border-top-left-radius: 0;
+          border-bottom-left-radius: 0;
+          background-color: var(--search-color);
+          color: #ffffff;
+          padding: var(--search-padding);
+          cursor: pointer;
+        }
+
+        #search-switch {
+          display: flex;
+          gap: 0.5rem;
+        }
+
+        #search-switch label {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+        }
+
+        #search-switch label span {
+          font-weight: 400;
+        }
+
+        #search-switch input[type='radio'] {
+          box-sizing: border-box;
+          width: 20px;
+          height: 20px;
+          margin: 6px;
+          padding: 0;
+          border: 2px solid black;
+          border-radius: 50%;
+          appearance: none;
+          background-color: transparent;
+          outline: none;
+        }
+
+        #search-switch input[type='radio']:not(:disabled):checked {
+          border-color: var(--search-color);
+          background-color: var(--search-color);
+          background-clip: content-box;
+          padding: 2px;
+          background-image: radial-gradient(
+            circle,
+            var(--search-color) 0%,
+            var(--search-color) 50%,
+            transparent 60%,
+            transparent 100%
+          );
+        }
+      </style>
+    </div>
+  </body>
+</html>
