@@ -8,16 +8,9 @@
   </head>
   <body>
     <div id="search-container">
-      <!-- "https://searchbox.ebsco.com/search/" -->
-      <!-- https://marion.tlcdelivers.com/ -->
       <form class="ebsco-single-search" target="_blank" id="search-box">
         <div id="hidden-inputs"></div>
-        <input
-          id="eb-sbb-search-input"
-          type="text"
-          name=""
-          placeholder="Search our catalog"
-        />
+        <input id="eb-sbb-search-input" type="text" />
         <input value="Search" type="submit" />
       </form>
       <div id="search-switch">
@@ -29,7 +22,7 @@
             data-search="tlc"
             checked
           />
-          <span>Books</span>
+          <span>Library Catalog</span>
         </label>
         <label>
           <input
@@ -38,27 +31,36 @@
             class="search-switch"
             data-search="eds"
           />
-          <span>Articles & Databases</span>
+          <span>Research Catalog</span>
         </label>
       </div>
       <!-- EBSCO Search Box Ends -->
       <script>
         document.addEventListener('DOMContentLoaded', () => {
-          // ** Form Action Constants and Request Parameter Objects ** //
-          const edsAction = 'https://searchbox.ebsco.com/search/';
-          const edsParams = {
-            schemaId: 'search',
-            custid: 's9230273',
-            group: 'main',
-            profid: 'eds',
-            scope: 'site',
-            site: 'eds-live',
-            direct: 'true',
+          // ** Search type constants ** //
+          const eds = {
+            action: 'https://searchbox.ebsco.com/search/',
+            name: 'bquery',
+            placeholder: 'Search articles, databases & more',
+            parameters: {
+              schemaId: 'search',
+              custid: 's9230273',
+              group: 'main',
+              profid: 'eds',
+              scope: 'site',
+              site: 'eds-live',
+              direct: 'true',
+            },
           };
-          const tlcAction = 'https://marion.tlcdelivers.com/';
-          const tlcParams = {
-            section: 'search',
-            config: 'bbdefault',
+
+          const tlc = {
+            action: 'https://marion.tlcdelivers.com/',
+            name: 'term',
+            placeholder: 'Search books, movies & more',
+            parameters: {
+              section: 'search',
+              config: 'bbdefault',
+            },
           };
 
           // ** DOM Constants ** //
@@ -67,28 +69,25 @@
           const searchInput = document.getElementById('eb-sbb-search-input');
           const hiddenInputs = document.getElementById('hidden-inputs');
 
-          // ** Logic Begins Here ** //
+          // ** Form Logic ** //
           // Handle search type change
-
           searchesTypes.forEach((search) => {
-            const edsPlaceholder = 'Search articles & databases';
-            const tlcPlaceholder = 'Search our catalog';
-
             // Evaluate search input placeholder on page load
             if (search.checked) {
-              if (search.dataset.search === 'eds') {
-                searchInput.setAttribute('placeholder', edsPlaceholder);
-              } else {
-                searchInput.setAttribute('placeholder', tlcPlaceholder);
-              }
+              const searchPointer = evaluateSearch(search);
+              searchInput.setAttribute(
+                'placeholder',
+                searchPointer.placeholder
+              );
             }
+
             // Evaluate search input place holder on search type change
             search.addEventListener('change', (e) => {
-              if (e.target.dataset.search === 'eds') {
-                searchInput.setAttribute('placeholder', edsPlaceholder);
-              } else {
-                searchInput.setAttribute('placeholder', tlcPlaceholder);
-              }
+              const searchPointer = evaluateSearch(e.target);
+              searchInput.setAttribute(
+                'placeholder',
+                searchPointer.placeholder
+              );
             });
           });
 
@@ -106,28 +105,15 @@
             for (const search of searchesTypes) {
               // Only submit form if search option is checked.
               if (search.checked) {
-                // If tlc option: build hidden inputs, set action, and set text input name
-                if (search.dataset.search === 'tlc') {
-                  searchInput.name = 'term';
-                  searchBox.action = tlcAction;
-                  const inputs = buildHiddenInputs(tlcParams);
+                // Evaluate which search type to use based on checked option
+                const searchPointer = evaluateSearch(search);
 
-                  for (const input of inputs) {
-                    hiddenInputs.appendChild(input);
-                  }
-
-                  //  If eds option: build hidden inputs, set action, and set text input name
-                } else if (search.dataset.search === 'eds') {
-                  searchInput.name = 'bquery';
-                  searchBox.action = edsAction;
-                  const inputs = buildHiddenInputs(edsParams);
-
-                  for (const input of inputs) {
-                    hiddenInputs.appendChild(input);
-                  }
-                  //   return null in all other case
-                } else {
-                  return null;
+                // Apply search info to form
+                searchInput.name = searchPointer.name;
+                searchBox.action = searchPointer.action;
+                const inputs = buildHiddenInputs(searchPointer.parameters);
+                for (const input of inputs) {
+                  hiddenInputs.appendChild(input);
                 }
 
                 // Submit search form
@@ -161,6 +147,17 @@
 
             return inputs;
           }
+
+          function evaluateSearch(search) {
+            // Evaluate which search type to use based provided option
+            if (search.dataset.search === 'tlc') {
+              return tlc;
+            } else if (search.dataset.search === 'eds') {
+              return eds;
+            } else {
+              return null;
+            }
+          }
         });
       </script>
       <style>
@@ -173,6 +170,11 @@
           --search-border-radius: 5px;
           --search-padding: 0.7rem;
           --font-size: 1.1rem;
+        }
+
+        #search-container {
+          width: 70%;
+          margin-left: auto;
         }
 
         #search-box {
@@ -191,7 +193,7 @@
           border-top-right-radius: 0;
           border-bottom-right-radius: 0;
           padding: var(--search-padding);
-          width: 300px;
+          flex-grow: 1;
         }
 
         #search-box input[type='submit'] {
@@ -245,6 +247,13 @@
             transparent 60%,
             transparent 100%
           );
+        }
+
+        @media screen and (max-width: 992px) {
+          #search-container {
+            width: 90%;
+            margin: auto;
+          }
         }
       </style>
     </div>
