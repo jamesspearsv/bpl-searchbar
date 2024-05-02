@@ -7,7 +7,7 @@
     <title>Document</title>
   </head>
   <body>
-    <div id="search-container">
+    <div id="combined-search-container">
       <form class="ebsco-single-search" target="_blank" id="search-box">
         <div id="hidden-inputs"></div>
         <input id="eb-sbb-search-input" type="text" />
@@ -71,10 +71,10 @@
 
           // ** Form Logic ** //
           // Handle search type change
-          searchesTypes.forEach((search) => {
+          searchesTypes.forEach((searchType) => {
             // Evaluate search input placeholder on page load
-            if (search.checked) {
-              const searchPointer = evaluateSearch(search);
+            if (searchType.checked) {
+              const searchPointer = evaluateSearch(searchType);
               searchInput.setAttribute(
                 'placeholder',
                 searchPointer.placeholder
@@ -82,7 +82,7 @@
             }
 
             // Evaluate search input place holder on search type change
-            search.addEventListener('change', (e) => {
+            searchType.addEventListener('change', (e) => {
               const searchPointer = evaluateSearch(e.target);
               searchInput.setAttribute(
                 'placeholder',
@@ -102,11 +102,11 @@
             removeChildren(hiddenInputs);
 
             // Check which search option is selected
-            for (const search of searchesTypes) {
+            for (const searchType of searchesTypes) {
               // Only submit form if search option is checked.
-              if (search.checked) {
+              if (searchType.checked) {
                 // Evaluate which search type to use based on checked option
-                const searchPointer = evaluateSearch(search);
+                const searchPointer = evaluateSearch(searchType);
 
                 // Apply search info to form
                 searchInput.name = searchPointer.name;
@@ -172,7 +172,7 @@
           --font-size: 1.1rem;
         }
 
-        #search-container {
+        #combined-search-container {
           width: 70%;
           margin-left: auto;
         }
