@@ -7,40 +7,130 @@
   </head>
   <body>
     <!-- EBSCO Search Box Begins -->
-    <div id="digital-resources-search-container">
-      <form
-        action="https://searchbox.ebsco.com/search/"
-        target="_blank"
-        class="ebsco-single-search"
-      >
-        <input name="schemaId" value="search" type="hidden" />
-        <input name="custid" value="s9230273" type="hidden" />
-        <input name="groupid" value="main" type="hidden" />
-        <input name="profid" value="eds" type="hidden" />
-        <input name="scope" value="site" type="hidden" />
-        <input name="site" value="eds-live" type="hidden" />
-        <input name="direct" value="true" type="hidden" />
-        <select class="eb-search__select" name="searchprefix">
-          <option value="" selected="selected">Keyword</option>
-          <option value="TI">Title</option>
-          <option value="AU">Author</option>
-        </select>
-        <input
-          id="eb-sbb-search-input"
-          name="bquery"
-          type="text"
-          placeholder="Search articles, books, journals & more"
-        />
-        <input value="Search" type="submit" />
-      </form>
+    <div id="digital-search-container">
+      <h1 id="digital-search-heading">eResources</h1>
+      <div>
+        <form
+          action="https://searchbox.ebsco.com/search/"
+          target="_blank"
+          class="ebsco-single-search"
+          id="digital-search-form"
+        >
+          <div>
+            <input name="schemaId" value="search" type="hidden" />
+            <input name="custid" value="s9230273" type="hidden" />
+            <input name="groupid" value="main" type="hidden" />
+            <input name="profid" value="eds" type="hidden" />
+            <input name="scope" value="site" type="hidden" />
+            <input name="site" value="eds-live" type="hidden" />
+            <input name="direct" value="true" type="hidden" />
+          </div>
+
+          <select class="eb-search__select" name="searchprefix">
+            <option value="" selected="selected">Keyword</option>
+            <option value="TI">Title</option>
+            <option value="AU">Author</option>
+          </select>
+          <input
+            id="eb-sbb-search-input"
+            name="bquery"
+            type="text"
+            placeholder="Search EBSCO Disovery Service"
+          />
+
+          <button type="submit">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              class="bi bi-search"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"
+              />
+            </svg>
+          </button>
+        </form>
+      </div>
     </div>
     <!-- EBSCO Search Box Ends -->
   </body>
   <style>
-    #digital-resources-search-container {
-      background-color: antiquewhite;
+    * {
+      font-size: 15px;
+      font-family: sans-serif;
+    }
+
+    #digital-search-container {
+      background-color: #2079c6;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 10px;
+      align-items: center;
+      padding: 1rem;
+    }
+
+    #digital-search-heading {
+      font-size: 2.667rem;
+      color: #ffffff;
+      margin: 0;
+    }
+
+    #digital-search-form {
+      width: 100%;
+      display: flex;
+    }
+
+    #digital-search-form input,
+    #digital-search-form select,
+    #digital-search-form button {
+      border: none;
+    }
+
+    #digital-search-form select {
+      border-radius: 0;
+      border-top-left-radius: 10px;
+      border-bottom-left-radius: 10px;
+      padding: 0.5rem;
+      background-color: #e9e9ed;
+
+      -webkit-appearance: none;
+      -webkit-border-radius: 0px;
+      -webkit-border-top-left-radius: 10px;
+      -webkit-border-bottom-left-radius: 10px;
+
+      background-image: url("data:image/svg+xml;utf8,<svg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='24' height='24' viewBox='0 0 24 24'><path fill='%23444' d='M7.406 7.828l4.594 4.594 4.594-4.594 1.406 1.406-6 6-6-6z'></path></svg>");
+      background-position: 100% 50%;
+      background-repeat: no-repeat;
+      padding-right: 2rem;
+    }
+
+    #digital-search-form select:hover {
+      background-color: #d7d7da;
+    }
+
+    #digital-search-form button[type='submit'] {
+      border-top-right-radius: 10px;
+      border-bottom-right-radius: 10px;
+      padding: 1rem 2rem;
       display: flex;
       justify-content: center;
+      align-items: center;
+      color: black;
+      background-color: #e9e9ed;
+    }
+
+    #digital-search-form button[type='submit']:hover {
+      background-color: #d7d7da;
+    }
+
+    #digital-search-form input[type='text'] {
+      padding: 1rem;
+      width: 40dvw;
+      border-radius: 0;
     }
   </style>
 </html>
