@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div>
+      <!-- ** REACT SCRIPTS ** -->
+      <script
+        crossorigin
+        src="https://unpkg.com/react@18/umd/react.production.min.js"
+      ></script>
+      <script
+        crossorigin
+        src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"
+      ></script>
+      <script
+        type="text/javascript"
+        src="https://unpkg.com/babel-standalone@6/babel.js"
+      ></script>
+      <!-- ** REACT COMPONENT ** -->
+      <script type="text/babel">
+        function SearchBar() {
+          const [usingEDS, setUsingEDS] = React.useState(false);
+
+          function handleToggle(e) {
+            const type = e.target.dataset.type;
+
+            if ('tlc' === type) setUsingEDS(false);
+            else setUsingEDS(true);
+          }
+
+          const edsHiddenInputs = (
+            <div>
+              <input name="schemaId" value="search" type="hidden" />
+              <input name="custid" value="s9230273" type="hidden" />
+              <input name="groupid" value="main" type="hidden" />
+              <input name="profid" value="eds" type="hidden" />
+              <input name="scope" value="site" type="hidden" />
+              <input name="site" value="eds-live" type="hidden" />
+              <input name="direct" value="true" type="hidden" />
+            </div>
+          );
+
+          const tlcHiddenInputs = (
+            <div>
+              <input name="section" value="search" type="hidden" />
+              <input name="config" value="bbdefault" type="hidden" />
+            </div>
+          );
+
+          return (
+            <form
+              action={
+                !usingEDS
+                  ? 'https://marion.tlcdelivers.com/'
+                  : 'https://searchbox.ebsco.com/search/'
+              }
+              target="_blank"
+              style={{ width: '70%', maginLeft: 'auto' }}
+            >
+              <div style={{ display: 'flex' }}>
+                <input
+                  name={!usingEDS ? 'term' : 'bquery'}
+                  type="text"
+                  placeholder={
+                    !usingEDS
+                      ? 'Search for books, movies & more'
+                      : 'Search for articles, databases & more'
+                  }
+                />
+                <button type="submit">Search</button>
+              </div>
+              {!usingEDS ? tlcHiddenInputs : edsHiddenInputs}
+              <div>
+                <label>
+                  <input
+                    type="radio"
+                    data-type="tlc"
+                    checked={!usingEDS}
+                    onClick={handleToggle}
+                  />
+                  <span>Library Catalog</span>
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    data-type="eds"
+                    checked={usingEDS}
+                    onClick={handleToggle}
+                  />
+                  <span>Research Catalog</span>
+                </label>
+              </div>
+            </form>
+          );
+        }
+
+        const reactNode = document.getElementById('search-container');
+        const root = ReactDOM.createRoot(reactNode);
+        root.render(<SearchBar />);
+      </script>
+      <!-- ** DOM CONTAINER ** -->
+      <div id="search-container"></div>
+    </div>
+  </body>
+</html>
