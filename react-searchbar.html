@@ -20,6 +20,102 @@
         type="text/javascript"
         src="https://unpkg.com/babel-standalone@6/babel.js"
       ></script>
+      <style>
+        * {
+          font-size: 15px;
+        }
+
+        :root {
+          --search-color: #2079c6;
+          --search-border-radius: 5px;
+          --search-padding: 0.7rem;
+          --font-size: 1.1rem;
+        }
+
+        #combined-search-container {
+          width: 70%;
+          margin-left: auto;
+        }
+
+        #search-box {
+          display: flex;
+          gap: 0;
+        }
+
+        #search-box * {
+          font-size: var(--font-size);
+        }
+
+        #search-box input[type='text'] {
+          border: solid 1px black;
+          border-right: none;
+          border-radius: var(--search-border-radius);
+          border-top-right-radius: 0;
+          border-bottom-right-radius: 0;
+          padding: var(--search-padding);
+          flex-grow: 1;
+        }
+
+        #search-box button[type='submit'] {
+          border: none;
+          border-radius: var(--search-border-radius);
+          border-top-left-radius: 0;
+          border-bottom-left-radius: 0;
+          background-color: var(--search-color);
+          color: #ffffff;
+          padding: var(--search-padding);
+          cursor: pointer;
+        }
+
+        #search-switch {
+          display: flex;
+          gap: 0.5rem;
+        }
+
+        #search-switch label {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+        }
+
+        #search-switch label span {
+          font-weight: 400;
+        }
+
+        #search-switch input[type='radio'] {
+          box-sizing: border-box;
+          width: 20px;
+          height: 20px;
+          margin: 6px;
+          padding: 0;
+          border: 2px solid black;
+          border-radius: 50%;
+          appearance: none;
+          background-color: transparent;
+          outline: none;
+        }
+
+        #search-switch input[type='radio']:not(:disabled):checked {
+          border-color: var(--search-color);
+          background-color: var(--search-color);
+          background-clip: content-box;
+          padding: 2px;
+          background-image: radial-gradient(
+            circle,
+            var(--search-color) 0%,
+            var(--search-color) 50%,
+            transparent 60%,
+            transparent 100%
+          );
+        }
+
+        @media screen and (max-width: 992px) {
+          #combined-search-container {
+            width: 90%;
+            margin: auto;
+          }
+        }
+      </style>
       <!-- ** REACT COMPONENT ** -->
       <script type="text/babel">
         function SearchBar() {
@@ -34,76 +130,82 @@
 
           const edsHiddenInputs = (
             <div>
-              <input name="schemaId" value="search" type="hidden" />
-              <input name="custid" value="s9230273" type="hidden" />
-              <input name="groupid" value="main" type="hidden" />
-              <input name="profid" value="eds" type="hidden" />
-              <input name="scope" value="site" type="hidden" />
-              <input name="site" value="eds-live" type="hidden" />
-              <input name="direct" value="true" type="hidden" />
+              <input name='schemaId' value='search' type='hidden' />
+              <input name='custid' value='s9230273' type='hidden' />
+              <input name='groupid' value='main' type='hidden' />
+              <input name='profid' value='eds' type='hidden' />
+              <input name='scope' value='site' type='hidden' />
+              <input name='site' value='eds-live' type='hidden' />
+              <input name='direct' value='true' type='hidden' />
             </div>
           );
 
           const tlcHiddenInputs = (
             <div>
-              <input name="section" value="search" type="hidden" />
-              <input name="config" value="bbdefault" type="hidden" />
+              <input name='section' value='search' type='hidden' />
+              <input name='config' value='bbdefault' type='hidden' />
             </div>
           );
 
           return (
-            <form
-              action={
-                !usingEDS
-                  ? 'https://marion.tlcdelivers.com/'
-                  : 'https://searchbox.ebsco.com/search/'
-              }
-              target="_blank"
-              style={{ width: '70%', maginLeft: 'auto' }}
-            >
-              <div style={{ display: 'flex' }}>
-                <input
-                  name={!usingEDS ? 'term' : 'bquery'}
-                  type="text"
-                  placeholder={
-                    !usingEDS
-                      ? 'Search for books, movies & more'
-                      : 'Search for articles, databases & more'
-                  }
-                />
-                <button type="submit">Search</button>
-              </div>
-              {!usingEDS ? tlcHiddenInputs : edsHiddenInputs}
-              <div>
-                <label>
+            <div id='combined-search-container'>
+              <form
+                action={
+                  !usingEDS
+                    ? 'https://marion.tlcdelivers.com/'
+                    : 'https://searchbox.ebsco.com/search/'
+                }
+                target='_blank'
+              >
+                <div id='search-box'>
                   <input
-                    type="radio"
-                    data-type="tlc"
-                    checked={!usingEDS}
-                    onClick={handleToggle}
+                    name={!usingEDS ? 'term' : 'bquery'}
+                    type='text'
+                    placeholder={
+                      !usingEDS
+                        ? 'Search for books, movies & more'
+                        : 'Search for articles, databases & more'
+                    }
                   />
-                  <span>Library Catalog</span>
-                </label>
-                <label>
-                  <input
-                    type="radio"
-                    data-type="eds"
-                    checked={usingEDS}
-                    onClick={handleToggle}
-                  />
-                  <span>Research Catalog</span>
-                </label>
-              </div>
-            </form>
+                  <button type='submit'>Search</button>
+                </div>
+                {!usingEDS ? tlcHiddenInputs : edsHiddenInputs}
+                <div
+                  id='search-switch'
+                  style={{
+                    marginTop: '10px',
+                  }}
+                >
+                  <label>
+                    <input
+                      type='radio'
+                      data-type='tlc'
+                      checked={!usingEDS}
+                      onClick={handleToggle}
+                    />
+                    <span>Library Catalog</span>
+                  </label>
+                  <label>
+                    <input
+                      type='radio'
+                      data-type='eds'
+                      checked={usingEDS}
+                      onClick={handleToggle}
+                    />
+                    <span>Research Catalog</span>
+                  </label>
+                </div>
+              </form>
+            </div>
           );
         }
 
-        const reactNode = document.getElementById('search-container');
+        const reactNode = document.getElementById('reactNode');
         const root = ReactDOM.createRoot(reactNode);
         root.render(<SearchBar />);
       </script>
-      <!-- ** DOM CONTAINER ** -->
-      <div id="search-container"></div>
+      <!-- ** DOM NODE ** -->
+      <div id="reactNode"></div>
     </div>
   </body>
 </html>
